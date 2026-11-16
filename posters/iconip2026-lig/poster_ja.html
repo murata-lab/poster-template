@@ -1,0 +1,204 @@
+<!doctype html>
+<!-- ICONIP 2026 poster MON-19, Japanese translation of poster_en.html (edit EN first, then port here). Build: make / make watch -->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>LIG ポスター ICONIP 2026（日本語）</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap">
+<link rel="stylesheet" href="poster.css">
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <h1>LIG：Layer-wise Integrated Gradients による<br>Transformer の層内情報流解析</h1>
+    <div class="logo"><img src="fig/symbol_waseda_3.png" alt="早稲田大学"><img src="fig/symbol_senshin_7.png" alt="早稲田大学 先進理工学研究科"></div><figure class="pqr"><div id="qr"></div><figcaption>プロジェクトページ</figcaption></figure>
+    <div class="hside"><div class="pid">MON-19</div><div class="miniqr"><figure><div data-qr="https://eightsuzuki.github.io/layer-wise-integrated-gradients/poster/iconip2026_lig_poster_en.pdf"></div><figcaption>ポスター（PDF）</figcaption></figure><figure><div data-qr="https://suzuki8.net/"></div><figcaption>個人ページ</figcaption></figure></div></div>
+  </div>
+  <div class="byline"><span class="authors">鈴木 詠斗<sup>1,3</sup>、日野 英逸<sup>1,2</sup>、村田 昇<sup>1</sup></span><span class="affil"><sup>1</sup>早稲田大学 &nbsp; <sup>2</sup>統計数理研究所 &nbsp; <sup>3</sup>富士通株式会社</span><span class="mail">✉ suzuki8@akane.waseda.jp</span></div>
+</header>
+
+<div class="overview">
+  <div class="cell"><h3 class="plabel">問題</h3>
+    <p class="big">Transformer の説明：<span class="nw">層の中で何が起きているか？</span></p>
+    <img class="ovimg" src="fig/transformer_node_viz.png" alt="グラフとして描いた Transformer の層の積み重ね：トークン、ヘッドごとの Attention 出力、MLP">
+    <ul class="plist">
+      <li><b>Attention map / Rollout</b> <span class="cite">[7, 5]</span>：重みだけ</li>
+      <li><b>ノルム分析</b> <span class="cite">[6]</span>：<span class="att">ATT</span>/<span class="mlp">MLP</span> を分けない</li>
+      <li><b>AttnLRP</b> <span class="cite">[4]</span>：演算ごとに規則が要る</li>
+      <li><b>IG</b> <span class="cite">[1]</span>：スカラー出力への帰属</li>
+    </ul>
+  </div>
+  <div class="cell"><h3 class="plabel">アイデア <span class="tag ours">提案</span></h3>
+    <p class="big">LIG：Attention と MLP を別々に IG で測る。合成は層全体の寄与と一致するか？</p>
+    <div class="idearow"><div class="ideafig"><img class="ovimg wide" src="fig/z2z_z2u_u2z_two_views.png" alt="層内の二つの経路：ヘッドごとに ATT で z から u、MLP で u から z へ進む経路と、層全体で z から z へ進む経路">
+    <div class="eq eq4">$$\underbrace{\colorbox{#f6e1ea}{$\widetilde{\mathrm{IG}}^{\color{#b8456a}\mathrm{LAYER}}_{i,j}$}}_{\text{層一括}}\;\overset{?}{\approx}\;\underbrace{\colorbox{#e1f0f3}{$\displaystyle \sum_h \widetilde{\mathrm{IG}}^{\color{#3f6fbf}\mathrm{ATT}}_{i,j,h}\,\widetilde{\mathrm{IG}}^{\color{#2e8b3e}\mathrm{MLP}}_{h,j}$}}_{\text{合成}}$$</div></div>
+    <div class="ideatext">
+      <p><b>集合対集合 IG</b> を Multi-Head Attention（<span class="att">ATT</span>）と <span class="mlp">MLP</span> の境界でとる。規則は IG だけ、再学習は不要。</p>
+      <p><span class="nw"><span class="att">ATT</span>：トークン→ヘッド</span> · <span class="nw"><span class="mlp">MLP</span>：ヘッド→出力トークン</span></p>
+      <p><b>合成：</b>ヘッドごとに <span class="att">ATT</span> × <span class="mlp">MLP</span> を掛け、ヘッドで和をとる（式）。</p>
+      <p class="readon">続き：<span class="nw">② 仕組み</span> · <span class="nw">④ 数値</span> · <span class="nw">③ 例</span></p>
+    </div></div>
+  </div>
+  <div class="cell"><h3 class="plabel">結果</h3>
+    <p class="big">部分と層全体の出発点をそろえると、合成と層一括の差が最小になった。</p>
+    <p>実際には：Attention は対象トークンから、MLP はその始点での Attention 出力から出発させる（または<span class="nw">両方ともゼロ）。</span></p>
+    <p class="qual">各参照ブロック内で最良、差は小さい。<span class="nw">BERT-base</span>・PTB 1,700 文（④）。帰属どうしの一致であり、モデルの振る舞いではない。残差経路は含まない。</p>
+  </div>
+</div>
+
+<main class="grid">
+<div class="mid">
+<div>
+  <section>
+    <h2><span class="n">1</span>IG とベースライン</h2>
+    <div class="igwrap">
+      <img class="igfloat" src="fig/objective_function_landscape_z1_z2_notitle.png" alt="Integrated Gradients：ベースラインから入力への直線経路に沿って勾配を積算する">
+      <p><span class="tag prior">先行研究</span>IG <span class="cite">[1]</span> は、<b>ベースライン</b> $z(0)$ から入力 $z$ への直線経路 $z(a)=z(0)+a\,(z-z(0))$ に沿って勾配を積分する：</p>
+      <div class="eq">$$\mathrm{IG}_d=(z_d-z_d(0))\int_0^1\frac{\partial f(z(a))}{\partial z_d}\,da$$</div>
+      <p class="igkey">ベースラインは各寄与を何と比べて測るかを決める。</p>
+      <div class="igrule"><b>寄与</b>＝変位 × 経路上の平均勾配。<br>$f(a)=\|y_j(a)-y_j(0)\|_2$,&ensp;$\textstyle\sum_r\mathrm{IG}_r=f(1)$。</div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>LIG：ATT と MLP の境界での IG<span class="tag ours">提案</span></h2>
+    <p><b>集合対集合 IG</b> は、出力トークン $j$ の変化<span class="nw">（$L_2$、⑤）</span>を入力トークン（<span class="att">ATT</span>）またはヘッド（<span class="mlp">MLP</span>）に帰属させる。先行の IG 応用では標準的でない。</p>
+    <div class="bnd3"><div><b class="att">ATT</b><br>$z_i\to u^{(h)}_j$: $\mathrm{IG}^{\mathrm{ATT}}_{i,j,h}$</div><div><b class="mlp">MLP</b>（$W_o$・LayerNorm・FFN、残差 $z$ 固定）<br>$u^{(h)}_j\to z^{(l+1)}_j$: $\mathrm{IG}^{\mathrm{MLP}}_{h,j}$</div><div><b class="layer">層一括（層 $l$）</b><br>$z_i\to z^{(l+1)}_j$: $\mathrm{IG}^{\mathrm{LAYER}}_{i,j}$</div></div>
+    <p class="blhead"><b>ベースライン</b>＝出発点（$a=0$）。全入力がそろって実際の値へ動く（$a=1$）。</p>
+    <svg class="bl" viewBox="0 0 900 300" role="img" aria-label="3 種類のベースライン：Zero はすべての経路をゼロベクトルから、ITB は対象トークンから始める。ATTITBa=0 は ITB の始点での ATT 出力を MLP のベースラインにする">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker>
+        <marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2e8b3e"/></marker>
+        <marker id="ahs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="3.5" markerHeight="3.5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3f6fbf"/></marker>
+        <marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#3f6fbf"/></marker>
+        <g id="toks">
+          <circle cx="215" cy="105" r="13" fill="#3f8fd9"/><circle cx="268" cy="185" r="13" fill="#3f8fd9"/><circle cx="232" cy="262" r="13" fill="#3f8fd9"/>
+          <circle cx="140" cy="200" r="15" fill="#d9534f"/>
+          <text x="236" y="92" font-size="20" font-style="italic">z<tspan dy="5" font-size="15">i</tspan></text>
+        </g>
+      </defs>
+      <g font-size="20" font-weight="800" fill="#1f3a5f"><text x="8" y="30">Zero</text><text x="246" y="30">Input Token Base（ITB）</text><text x="484" y="30">MLP：ATTITBa=0</text></g>
+      <rect x="2" y="44" width="230" height="254" rx="10" fill="#f4f6f9"/>
+      <rect x="240" y="44" width="230" height="254" rx="10" fill="#f4f6f9"/>
+      <rect x="478" y="44" width="420" height="254" rx="10" fill="#f4f6f9"/>
+
+      <g transform="translate(-5.5,70) scale(0.82) translate(-2,-44)">
+      <!-- Zero: every path from the origin -->
+      <g stroke="#555" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#ah)" fill="none">
+        <path d="M40,270 L200,114"/><path d="M40,270 L253,190"/><path d="M40,270 L218,264"/><path d="M40,270 L126,209"/>
+      </g>
+      <circle cx="40" cy="270" r="7" fill="#1a1a1a"/><text x="22" y="262" font-size="24" font-weight="800">0</text>
+      <use href="#toks"/>
+      <text x="160" y="198" font-size="24" font-style="italic">z<tspan dy="6" font-size="17">j</tspan></text>
+<!-- legend for the token colours (shared by the Zero and ITB panels) -->
+      <g font-size="20" fill="#333">
+        <circle cx="22" cy="64" r="7" fill="#d9534f"/><text x="36" y="70">対象トークン <tspan font-style="italic">z</tspan><tspan dy="4" font-size="12" font-style="italic">j</tspan></text>
+        <circle cx="22" cy="88" r="7" fill="#3f8fd9"/><text x="36" y="94">他のトークン <tspan font-style="italic">z</tspan><tspan dy="4" font-size="12" font-style="italic">i</tspan></text>
+        <path d="M13,112 L31,112" stroke="#555" stroke-width="2.5" stroke-dasharray="5 3" fill="none"/><text x="36" y="118">IG の経路</text><text x="36" y="141" font-size="17" fill="#666">（全トークン同時）</text>
+      </g>
+      </g>
+
+      <!-- ITB: every path from the target token z_j -->
+      <g transform="translate(225.5,39) scale(1) translate(-44,-44)">
+        <g stroke="#555" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#ah)" fill="none">
+          <path d="M150,190 L206,117"/><path d="M155,200 L253,186"/><path d="M152,210 L220,254"/>
+        </g>
+        <use href="#toks"/>
+        <text x="138" y="240" font-size="24" text-anchor="middle" font-style="italic">z<tspan dy="6" font-size="17">j</tspan></text>
+        <text x="146" y="174" font-size="21" fill="#b33" text-anchor="end">IG<tspan dy="5" font-size="13" font-style="italic">j,j</tspan><tspan dy="-5"> = 0</tspan></text>
+      </g>
+
+      <!-- ATTITBa=0 (per output token j): at a = 0 every input token sits at one point z_j and moves to its own z_k (ITB path);
+           ATT on that start gives each head h its value of z_j, u_j^(h)(0) = MLP baseline; MLP-IG runs u_j^(h)(0) -> u_j^(h) per head,
+           in head space, residual z_j fixed. -->
+      <g transform="translate(468,64.75) scale(1.25) translate(0,-50)">
+        <g stroke="#c9d3e0" stroke-width="2" fill="#fff"><rect x="12" y="88" width="88" height="36" rx="8"/><rect x="12" y="168" width="88" height="36" rx="8"/></g>
+        <circle cx="56" cy="106" r="7.5" fill="#d9534f"/>
+        <circle cx="32" cy="186" r="7" fill="#3f8fd9"/><circle cx="56" cy="186" r="7" fill="#d9534f"/><circle cx="80" cy="186" r="7" fill="#3f8fd9"/>
+        <g text-anchor="middle">
+          <text x="56" y="62" font-size="14" fill="#666">(a = 0)</text>
+          <text x="56" y="80" font-size="14"><tspan font-style="italic">z</tspan><tspan dy="3" font-size="10" font-style="italic">k</tspan><tspan dy="-3">(0) = </tspan><tspan font-style="italic">z</tspan><tspan dy="3" font-size="10" font-style="italic">j</tspan><tspan dy="-4">（全 k）</tspan></text>
+          <text x="38" y="222" font-size="14"><tspan>{</tspan><tspan font-style="italic">z</tspan><tspan dy="3" font-size="10" font-style="italic">k</tspan><tspan dy="-3">}</tspan><tspan dy="3" font-size="10" font-style="italic">k</tspan></text>
+          <text x="82" y="222" font-size="14" fill="#666">(a = 1)</text>
+        </g>
+        <g stroke="#555" stroke-width="2" stroke-dasharray="5 4" fill="none" marker-end="url(#ah)"><path d="M56,114 L33.1,174.2"/><path d="M56,114 L56.0,174.0"/><path d="M56,114 L78.9,174.2"/></g>
+        <text x="96" y="138" font-size="14" fill="#555">ITB の経路：</text><text x="96" y="155" font-size="14" fill="#555"><tspan font-style="italic">z</tspan><tspan dy="3" font-size="10" font-style="italic">j</tspan><tspan dy="-3">→</tspan><tspan font-style="italic">z</tspan><tspan dy="3" font-size="10" font-style="italic">k</tspan></text>
+        <g stroke="#3f6fbf" stroke-width="3" fill="none" marker-end="url(#ahs)"><path d="M102,106 L120,106"/><path d="M187,106 L199,106"/><path d="M102,186 L120,186"/><path d="M187,186 L199,186"/></g>
+        <g fill="#e3ebf8" stroke="#3f6fbf" stroke-width="2" opacity=".85"><rect x="130" y="82" width="56" height="32" rx="6"/><rect x="126" y="86" width="56" height="32" rx="6"/><rect x="130" y="162" width="56" height="32" rx="6"/><rect x="126" y="166" width="56" height="32" rx="6"/></g><g fill="#e3ebf8" stroke="#3f6fbf" stroke-width="2.5"><rect x="122" y="90" width="56" height="32" rx="6"/><rect x="122" y="170" width="56" height="32" rx="6"/></g>
+        <g font-size="18" font-weight="800" fill="#3f6fbf" text-anchor="middle"><text x="148" y="112">ATT<tspan dy="-7" font-size="12" font-weight="600">(h)</tspan></text><text x="148" y="192">ATT<tspan dy="-7" font-size="12" font-weight="600">(h)</tspan></text></g>
+        <circle cx="210" cy="100" r="9" fill="#fff" stroke="#2e8b3e" stroke-width="3"/><circle cx="229" cy="110" r="9" fill="#fff" stroke="#2e8b3e" stroke-width="3"/><circle cx="248" cy="98" r="9" fill="#fff" stroke="#2e8b3e" stroke-width="3"/>
+        <text x="264" y="108" font-size="15"><tspan>{</tspan><tspan font-style="italic">u</tspan><tspan dy="5" font-size="11" font-style="italic">j</tspan><tspan dx="-6" dy="-13" font-size="10">(h)</tspan><tspan dy="8">(0)}</tspan><tspan dy="4" font-size="11" font-style="italic">h</tspan></text>
+        <text x="229" y="78" font-size="15" font-weight="700" fill="#2e8b3e" text-anchor="middle">MLP のベースライン</text>
+        <g stroke="#2e8b3e" stroke-width="2.2" stroke-dasharray="6 4" fill="none" marker-end="url(#ahg)"><path d="M210,110 L209,179.0"/><path d="M229,120 L228,168.0"/><path d="M248,108 L248,179.0"/></g>
+        <g font-size="15" fill="#2e8b3e" font-weight="700"><text x="264" y="140">MLP-IG</text><text x="264" y="157">経路</text></g>
+        <circle cx="209" cy="192" r="9" fill="#2e8b3e"/><circle cx="228" cy="181" r="9" fill="#2e8b3e"/><circle cx="248" cy="192" r="9" fill="#2e8b3e"/>
+        <text x="264" y="196" font-size="15"><tspan>{</tspan><tspan font-style="italic">u</tspan><tspan dy="5" font-size="11" font-style="italic">j</tspan><tspan dx="-6" dy="-13" font-size="10">(h)</tspan><tspan dy="8">}</tspan><tspan dy="4" font-size="11" font-style="italic">h</tspan></text>
+        <text x="232" y="222" font-size="14" fill="#666" text-anchor="middle">H 個のヘッドそれぞれ</text>
+      </g>
+
+    </svg>
+    <div class="blcap"><div><b>Zero：</b>全トークンが $\mathbf{0}$ から出発。</div><div><b>ITB：</b>全トークンが対象 $z_j$ から出発。$z_j$ 自身の寄与は構成上 0 <span class="cite">[8]</span>。</div><div><b>ATTITBa=0：</b><span class="mlp">MLP</span> は ITB 始点（全トークン $=z_j$）での各ヘッドの <span class="att">ATT</span> 出力から出発。</div></div>
+  </section>
+</div>
+<div>
+  <section>
+    <h2><span class="n">3</span>例：層一括 IG を層ごとに見る</h2>
+    <p class="mapcap">層一括 IG（ATT/MLP の分解なし）・Zero ベースライン・PTB の 1 文（定性的）。列：入力、行：出力、大きさ：|寄与|、<span style="color:#d9534f;font-weight:600">赤</span>：自分自身、<span style="color:#2196F3;font-weight:600">青</span>：他。この例では Layer 0 は対角付近、Layer 9–11 は文全体。</p>
+    <img class="mapfull" src="fig/z2z_layerwise_ig_map_contribution.png" alt="Layer 0 から 11 までのトークン間寄与マップを縦に並べた図">
+  </section>
+</div>
+</div>
+
+<div class="bot">
+<div>
+  <section>
+    <h2><span class="n">4</span>結果：合成と層一括 IG の比較</h2>
+    <p><i>compositional gap</i>（合成のずれ）：層一括と合成の帰属ベクトル（入力トークン上、文・層・出力トークンごと）の $L_2$ 距離。LRP 流の合成 <span class="cite">[2, 3]</span> は<b>IG の連鎖律ではない</b>（残差経路なし）ので、両者は一致するとは限らない。</p>
+    <p><b>設定：</b>BERT-base-uncased · PTB dev 1,700 文 <span class="cite">[9]</span> · $m=32$ ステップ。参照ごとに上位 3 構成、太字が最良。<b>比較はブロック内のみ。</b></p>
+    <table class="res">
+      <tr><th class="layer">参照（層一括）</th><th class="att">合成：<span class="att">ATT</span></th><th class="mlp"><span class="mlp">MLP</span> ベースライン</th><th style="text-align:right">$L_2$ ↓</th></tr>
+      <tr class="best"><td rowspan="3" class="ref">ITB<small>Input Token Base：全トークンが $z_j$ から出発</small></td><td>ITB</td><td>ATTITBa=0</td><td class="num">0.305</td></tr>
+      <tr><td>ITB-zeroRatio</td><td>ATTITBa=0</td><td class="num">0.312</td></tr>
+      <tr><td>ITB-mapRatio</td><td>ATTITBa=0</td><td class="num">0.318</td></tr>
+      <tr class="best"><td rowspan="3" class="ref">Zero<small>ゼロベクトル $\mathbf{0}$ から出発</small></td><td>Zero</td><td>Zero</td><td class="num">0.736</td></tr>
+      <tr><td>ITB-zeroRatio</td><td>Zero</td><td class="num">0.744</td></tr>
+      <tr><td>Zero</td><td>ATTITBa=0</td><td class="num">0.749</td></tr>
+    </table>
+    <p class="tnote">ITB-zeroRatio / -mapRatio：ITB で 0 になる自身のスコアを Zero ベースラインの自身スコア／attention 重み $\alpha_{j,j}$ で置き換え、総和は保つ。</p>
+    <p class="key">最良の <span class="mlp">MLP</span> ベースライン：ITB では ATTITBa=0（試したどの <span class="att">ATT</span> ベースラインでも）、Zero では Zero。</p>
+  </section>
+</div>
+<div>
+  <section>
+    <h2><span class="n">5</span>スコアと先行研究</h2>
+    <p>入力トークンまたはヘッド $r$ ごとに次元について IG の和をとり、全体の変化で正規化（符号付き）：</p>
+    <div class="eq">$$\mathrm{IG}_{r,j}=\sum_{d\in r}\mathrm{IG}_d,\qquad \widetilde{\mathrm{IG}}_{r,j}=\frac{\mathrm{IG}_{r,j}}{\|y_j(1)-y_j(0)\|_2}$$</div>
+      <table class="cmp">
+      <tr><th>手法</th><th>限界 / LIG の利点</th></tr>
+      <tr><td><span class="tag prior">先行研究</span>Attention map <span class="cite">[7]</span>・Rollout <span class="cite">[5]</span></td><td class="gap">value・<span class="mlp">MLP</span> を見ない</td></tr>
+      <tr><td><span class="tag prior">先行研究</span>ノルム分析 <span class="cite">[6]</span></td><td class="gap"><span class="att">ATT</span>/<span class="mlp">MLP</span> を分けない</td></tr>
+      <tr><td><span class="tag prior">先行研究</span>AttnLRP <span class="cite">[4]</span></td><td class="gap">演算ごとに規則が要る</td></tr>
+      <tr class="ours"><td><span class="tag ours">提案</span>LIG</td><td class="gap"><b>規則は IG のみ。分けて合成し照合</b></td></tr>
+    </table>
+  </section>
+  <section>
+    <h2><span class="n">6</span>範囲と今後</h2>
+    <ul>
+      <li><b>限界：</b>BERT-base と PTB のみ。直線経路はデータ分布の外を通りうる。ITB の自身スコア補完は一意とは限らない。$L_2$ は出力変化の向きを捨てる。</li>
+      <li><b>今後：</b>decoder-only モデル、EAP-IG <span class="cite">[10, 11]</span> との比較、介入による検証。</li>
+    </ul>
+  </section>
+</div>
+</div>
+<p class="refs">[1] Sundararajan+ ICML 2017 · [2] Bach+ PLOS ONE 2015 · [3] Montavon+ LRP overview 2019 · [4] Achtibat+ (AttnLRP) ICML 2024 · [5] Abnar &amp; Zuidema ACL 2020 · [6] Kobayashi+ EMNLP 2020 · [7] Jain &amp; Wallace NAACL 2019 · [8] Sturmfels+ Distill 2020 · [9] Marcus+ Treebank-3, LDC 1999 · [10] Syed+ BlackboxNLP 2024 · [11] Hanna+ COLM 2024。本研究は JSPS 科研費 JP26K02989・JP26K23861・JP25K24611 の助成による。プロジェクトページ：https://eightsuzuki.github.io/layer-wise-integrated-gradients/</p>
+</main>
+
+
+<script src="poster.js"></script>
+</body>
+</html>

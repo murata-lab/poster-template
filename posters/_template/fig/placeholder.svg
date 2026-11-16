@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+  <rect x="4" y="4" width="792" height="442" rx="16" fill="#f4f6f9" stroke="#b9c3d1" stroke-width="6" stroke-dasharray="24 14"/>
+  <path d="M260 300 L350 200 L420 270 L470 230 L560 300 Z" fill="#c9d3e0"/>
+  <circle cx="320" cy="160" r="26" fill="#c9d3e0"/>
+  <text x="400" y="370" font-family="sans-serif" font-size="34" fill="#6b7a90" text-anchor="middle">fig/your_figure.png</text>
+</svg>

@@ -1,0 +1,101 @@
+<!doctype html>
+<!-- Poster template, A1 portrait. Edit the text, put figures in fig/, then run `make watch` in this folder.
+     Build: make (all PDFs) · make en · make watch · make check (fonts for print). Design: poster.css. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Poster title</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<link rel="stylesheet" href="poster.css">
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <h1>A Short Title That States the Finding,<br>Not Just the Topic</h1>
+    <div class="logo"><img src="fig/symbol_waseda_3.png" alt="Waseda University"><img src="fig/symbol_senshin_7.png" alt="Graduate School of Advanced Science and Engineering, Waseda University"></div>
+    <figure class="qr"><div data-qr="https://example.com/"></div><figcaption>Project page</figcaption></figure>
+    <div class="pid">P-01</div>  <!-- poster ID from the program; delete if none -->
+  </div>
+  <div class="byline">
+    <span class="authors">First Author<sup>1</sup>, Second Author<sup>1,2</sup>, Noboru Murata<sup>1</sup></span>
+    <span class="affil"><sup>1</sup>Waseda University &nbsp; <sup>2</sup>Another Institute</span>
+    <span class="mail">✉ you@example.com</span>
+  </div>
+</header>
+
+<!-- The band is the 1-minute version: someone who reads only this row should get the message.
+     One headline per card, a figure, one supporting line. Details go in the sections below. -->
+<div class="band">
+  <div class="card"><h3>Problem</h3>
+    <p class="big">What question does this work answer?</p>
+    <img src="fig/placeholder.svg" alt="">
+    <p>One line on why existing methods fall short.</p>
+  </div>
+  <div class="card"><h3>Idea <span class="tag ours">OURS</span></h3>
+    <p class="big">The method in one sentence.</p>
+    <img src="fig/placeholder.svg" alt="">
+    <p>One line on what is new.</p>
+  </div>
+  <div class="card"><h3>Result</h3>
+    <p class="big">The main finding, stated plainly.</p>
+    <p>One line on the setting (data, model, size) and its scope.</p>
+  </div>
+</div>
+
+<main>
+  <section>
+    <h2><span class="n">1</span>Background</h2>
+    <p>Prior work <span class="cite">[1]</span> does X. Inline math works: $f(x)=\sum_i w_i x_i$.</p>
+    <ul>
+      <li><b>Approach A</b> <span class="cite">[1]</span>: its limitation</li>
+      <li><b>Approach B</b> <span class="cite">[2]</span>: its limitation</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>Method<span class="tag ours">OURS</span></h2>
+    <p>Display math goes in an <code>.eq</code> box:</p>
+    <div class="eq">$$\mathrm{Score}_i=(x_i-x'_i)\int_0^1\frac{\partial f(x'+a(x-x'))}{\partial x_i}\,da$$</div>
+    <div class="row">
+      <figure><img src="fig/placeholder.svg" alt=""><figcaption>A figure beside text (<code>.row</code>).</figcaption></figure>
+      <div><p>Explain the figure here. Colour key words: <span class="c1">part one</span>, <span class="c2">part two</span>, <span class="c3">part three</span>.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>Experiments</h2>
+    <p><b>Setup.</b> Dataset, model, number of samples, metric.</p>
+    <figure><img src="fig/placeholder.svg" alt=""><figcaption>Figure 1. Caption: what to look at, in one or two lines.</figcaption></figure>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span>Results</h2>
+    <table>
+      <tr><th>Method</th><th>Setting</th><th style="text-align:right">Score ↑</th></tr>
+      <tr><td>Baseline <span class="cite">[1]</span></td><td>default</td><td class="num">0.712</td></tr>
+      <tr><td>Baseline <span class="cite">[2]</span></td><td>default</td><td class="num">0.745</td></tr>
+      <tr class="best"><td>Ours</td><td>default</td><td class="num">0.801</td></tr>
+    </table>
+    <p class="key">The one sentence you want people to remember from this table.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span>Limitations &amp; next steps</h2>
+    <ul>
+      <li><b>Limits:</b> what was not tested.</li>
+      <li><b>Next:</b> what comes next.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer><p>[1] Author+ Venue Year · [2] Author+ Venue Year. Supported by JSPS KAKENHI JPxxxxxxxx.</p></footer>
+
+<script src="poster.js"></script>
+</body>
+</html>

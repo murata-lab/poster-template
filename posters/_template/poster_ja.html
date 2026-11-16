@@ -1,0 +1,101 @@
+<!doctype html>
+<!-- ポスターの雛形（A1 縦）。文章を書き換え、図を fig/ に置き、このフォルダで `make watch` を実行する。
+     ビルド: make（全 PDF）· make ja · make watch · make check（印刷用フォントの確認）。デザイン: poster.css -->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>ポスターのタイトル</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;0,900;1,400&family=BIZ+UDPGothic:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
+<link rel="stylesheet" href="poster.css">
+</head>
+<body>
+
+<header>
+  <div class="top">
+    <h1>話題ではなく結論を述べる<br>短いタイトル</h1>
+    <div class="logo"><img src="fig/symbol_waseda_3.png" alt="早稲田大学"><img src="fig/symbol_senshin_7.png" alt="早稲田大学 先進理工学研究科"></div>
+    <figure class="qr"><div data-qr="https://example.com/"></div><figcaption>プロジェクトページ</figcaption></figure>
+    <div class="pid">P-01</div>  <!-- プログラムのポスター番号。なければ消す -->
+  </div>
+  <div class="byline">
+    <span class="authors">第一 著者<sup>1</sup>，第二 著者<sup>1,2</sup>，村田 昇<sup>1</sup></span>
+    <span class="affil"><sup>1</sup>早稲田大学 &nbsp; <sup>2</sup>別の所属</span>
+    <span class="mail">✉ you@example.com</span>
+  </div>
+</header>
+
+<!-- 上の帯は「1 分版」。この帯だけ読んだ人にも主張が伝わるようにする。
+     カードごとに見出し 1 つ・図・補足 1 行。詳細は下の節に回す。 -->
+<div class="band">
+  <div class="card"><h3>問題</h3>
+    <p class="big">この研究はどんな問いに答えるか</p>
+    <img src="fig/placeholder.svg" alt="">
+    <p>既存手法の何が足りないかを 1 行で。</p>
+  </div>
+  <div class="card"><h3>アイデア <span class="tag ours">提案</span></h3>
+    <p class="big">手法を一文で</p>
+    <img src="fig/placeholder.svg" alt="">
+    <p>何が新しいかを 1 行で。</p>
+  </div>
+  <div class="card"><h3>結果</h3>
+    <p class="big">主な結果を平易に</p>
+    <p>条件（データ・モデル・規模）と、どこまで言えるかを 1 行で。</p>
+  </div>
+</div>
+
+<main>
+  <section>
+    <h2><span class="n">1</span>背景</h2>
+    <p>先行研究 <span class="cite">[1]</span> は X を行う。文中の数式も書ける: $f(x)=\sum_i w_i x_i$。</p>
+    <ul>
+      <li><b>手法 A</b> <span class="cite">[1]</span>: その限界</li>
+      <li><b>手法 B</b> <span class="cite">[2]</span>: その限界</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>手法<span class="tag ours">提案</span></h2>
+    <p>別行立ての数式は <code>.eq</code> の枠に入れる:</p>
+    <div class="eq">$$\mathrm{Score}_i=(x_i-x'_i)\int_0^1\frac{\partial f(x'+a(x-x'))}{\partial x_i}\,da$$</div>
+    <div class="row">
+      <figure><img src="fig/placeholder.svg" alt=""><figcaption>文章の横に置く図（<code>.row</code>）。</figcaption></figure>
+      <div><p>図の説明をここに書く。キーワードの色分け: <span class="c1">部品 1</span>、<span class="c2">部品 2</span>、<span class="c3">部品 3</span>。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>実験</h2>
+    <p><b>設定.</b> データセット、モデル、サンプル数、評価指標。</p>
+    <figure><img src="fig/placeholder.svg" alt=""><figcaption>図 1. キャプション: どこを見ればよいかを 1〜2 行で。</figcaption></figure>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span>結果</h2>
+    <table>
+      <tr><th>手法</th><th>設定</th><th style="text-align:right">スコア ↑</th></tr>
+      <tr><td>ベースライン <span class="cite">[1]</span></td><td>既定</td><td class="num">0.712</td></tr>
+      <tr><td>ベースライン <span class="cite">[2]</span></td><td>既定</td><td class="num">0.745</td></tr>
+      <tr class="best"><td>提案手法</td><td>既定</td><td class="num">0.801</td></tr>
+    </table>
+    <p class="key">この表から覚えて帰ってほしい一文。</p>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span>限界と今後</h2>
+    <ul>
+      <li><b>限界:</b> 試していないこと。</li>
+      <li><b>今後:</b> 次にやること。</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer><p>[1] Author+ Venue Year · [2] Author+ Venue Year. 本研究は JSPS 科研費 JPxxxxxxxx の助成を受けた。</p></footer>
+
+<script src="poster.js"></script>
+</body>
+</html>

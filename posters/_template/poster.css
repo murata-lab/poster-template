@@ -1,0 +1,95 @@
+/* Poster design shared by poster_en.html and poster_ja.html.
+   Paper size: change BOTH the @page line and --w / --h below.
+     A1 portrait 594mm x 841mm (default) · A0 portrait 841mm x 1189mm (multiply font sizes by ~1.4)
+   Colours: edit the variables in :root. */
+@page { size: 594mm 841mm; margin: 0; }
+:root {
+  --w: 594mm; --h: 841mm;
+  --ink: #1a1a1a; --muted: #555; --rule: #d6dbe3; --panel: #f4f6f9;
+  --accent: #1f3a5f;          /* title, headings, section numbers */
+  --accent-soft: #eef3fb;     /* band cards, highlighted rows */
+  --c1: #3f6fbf; --c2: #2e8b3e; --c3: #b8456a;   /* .c1 .c2 .c3 coloured words */
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: #fff; color: var(--ink); }
+body {
+  width: var(--w); height: var(--h); overflow: hidden;
+  display: flex; flex-direction: column;
+  font-family: "Lato", sans-serif; font-size: 21pt; line-height: 1.3;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+/* Japanese: Latin letters in Lato, kana/kanji in BIZ UDPGothic. Both are static TrueType,
+   so Chrome embeds them as real fonts (variable or CFF fonts become Type 3, which print shops reject). */
+html[lang="ja"] body { font-family: "Lato", "BIZ UDPGothic", sans-serif; line-break: strict; }
+html[lang="ja"] h1, html[lang="ja"] h2, html[lang="ja"] .band .big { word-break: auto-phrase; }
+html[lang="ja"] .katex .text, html[lang="ja"] .katex .cjk_fallback { font-family: "BIZ UDPGothic", KaTeX_Main, serif; }
+.katex { font-size: 1.05em; }
+
+/* ---------- header: title, authors, logos, QR codes ---------- */
+header { padding: 8mm 18mm 5mm 20mm; border-bottom: 2mm solid var(--accent); display: flex; flex-direction: column; gap: 3mm; }
+header .top { display: flex; align-items: center; gap: 8mm; }
+h1 { flex: 1; margin: 0; font-size: 54pt; line-height: 1.1; font-weight: 800; color: var(--accent); letter-spacing: -0.01em; }
+header .logo { display: flex; gap: 4mm; align-items: center; }
+header .logo img { height: 30mm; width: auto; }
+.byline { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8mm; }
+.authors { font-size: 27pt; font-weight: 700; }
+.affil { font-size: 20pt; color: var(--muted); }
+.mail { font-size: 20pt; color: var(--muted); }
+.pid { font-size: 30pt; font-weight: 800; background: var(--accent); color: #fff; border-radius: 3mm; padding: 2mm 6mm; white-space: nowrap; }
+
+/* QR code: <figure class="qr"><div data-qr="https://..."></div><figcaption>...</figcaption></figure> */
+.qr { margin: 0; text-align: center; }
+.qr div { width: 32mm; height: 32mm; margin: 0 auto; }
+.qr svg { width: 100%; height: 100%; display: block; }
+.qr figcaption { font-size: 14pt; color: var(--muted); margin-top: 1.5mm; }
+
+/* ---------- band: the 1-minute version of the poster ---------- */
+.band { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8mm; padding: 7mm 18mm; background: var(--panel); border-bottom: 1.5mm solid var(--accent); }
+.band .card { background: #fff; border-radius: 4mm; padding: 5mm 6mm; display: flex; flex-direction: column; }
+.band h3 { margin: 0 0 2mm; font-size: 20pt; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.band .big { margin: 0 0 3mm; font-size: 34pt; line-height: 1.12; font-weight: 800; color: var(--accent); }
+.band p { margin: 0 0 2mm; }
+.band img { width: 100%; max-height: 70mm; object-fit: contain; margin: 2mm 0; }
+
+/* ---------- main: two columns, kept at equal height ----------
+   column-fill: auto instead fills the left column to the bottom before starting the right one. */
+main { flex: 1; min-height: 0; overflow: hidden; columns: 2; column-gap: 14mm; column-fill: balance; padding: 8mm 18mm 0; }
+section { margin-bottom: 7mm; }
+h2 { margin: 0 0 3mm; padding-bottom: 2mm; font-size: 32pt; font-weight: 800; color: var(--accent); border-bottom: 1mm solid var(--rule); break-after: avoid; }
+h2 .n { display: inline-block; width: 1.35em; height: 1.35em; line-height: 1.35em; margin-right: 3mm; border-radius: 50%;
+        background: var(--accent); color: #fff; text-align: center; font-size: .8em; vertical-align: .1em; }
+p { margin: 0 0 3mm; }
+ul, ol { margin: 0 0 4mm; padding-left: 1.1em; }
+li { margin-bottom: 2mm; }
+/* keep these in one piece instead of splitting them across the two columns */
+p, li, figure, table, .eq, .key, .row, svg { break-inside: avoid; }
+
+figure { margin: 3mm 0 5mm; }
+figure img { width: 100%; display: block; }
+figcaption { font-size: 17pt; color: var(--muted); margin-top: 2mm; line-height: 1.3; }
+.eq { background: var(--panel); border-radius: 3mm; padding: .5mm 4mm; margin: 2mm 0 3mm; }
+.katex-display { margin: .4em 0; }
+.key { border-left: 2.5mm solid var(--accent); padding: 2mm 0 2mm 5mm; font-weight: 700; margin: 3mm 0; }
+.row { display: flex; gap: 6mm; align-items: flex-start; }      /* figure beside text: <div class="row"><figure>…</figure><div>…</div></div> */
+.row > * { flex: 1; min-width: 0; }
+
+table { width: 100%; border-collapse: collapse; font-size: 18pt; margin: 2mm 0 3mm; }
+th, td { padding: 1mm 3mm; text-align: left; border-bottom: .4mm solid var(--rule); }
+th { color: var(--muted); font-weight: 700; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+tr.best td { font-weight: 800; background: var(--accent-soft); }
+
+.c1 { color: var(--c1); font-weight: 700; } .c2 { color: var(--c2); font-weight: 700; } .c3 { color: var(--c3); font-weight: 700; }
+.tag { display: inline-block; font-size: .62em; font-weight: 800; letter-spacing: .05em; padding: .3mm 2mm; border-radius: 1.5mm; vertical-align: .25em; margin: 0 2mm; }
+.tag.ours { background: var(--accent); color: #fff; }
+.tag.prior { background: var(--rule); color: var(--ink); }
+.cite { color: var(--muted); }
+.nw { white-space: nowrap; }
+
+/* footer: references and funding, pinned to the bottom edge */
+footer { padding: 3mm 18mm 6mm; border-top: .4mm solid var(--rule); font-size: 14pt; color: var(--muted); line-height: 1.3; }
+footer p { margin: 0; }
+
+/* poster.js shows this when something does not fit; `make` warns about it */
+#overflow { position: fixed; top: 0; left: 0; right: 0; background: red; color: #fff; font-size: 40pt; text-align: center; z-index: 9; }
