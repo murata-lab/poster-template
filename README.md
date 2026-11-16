@@ -105,9 +105,22 @@ make watch                 # 保存するたびに poster_en.pdf / poster_ja.pdf
 
 片方を原本と決め、そちらを先に直してからもう一方に反映すると食い違いが起きにくくなります。デザイン（`poster.css`）は 2 つで共通です。日本語版だけ文字の大きさなどを変えたいときは、`html[lang="ja"] …` のセレクタで上書きしてください。
 
+## AI エージェントで作業するとき（Claude Code / Codex / Cursor）
+
+このリポジトリには、ポスター作業用のスキルが 2 つ入っています。リポジトリを開いて頼めば、エージェントが自動で読み込みます。
+
+| スキル | 使う場面 |
+|---|---|
+| `poster-build` | 新しいポスターを作る、PDF にする、はみ出しを直す、サイズや図を調整する、入稿前のチェック |
+| `poster-writing` | 帯と本文に何を書くか、語数を削る、言い過ぎのチェック、発表の回し方、ポスターの講評 |
+
+たとえば「posters/jsai2027 のポスター、はみ出してるので直して」「このポスターを講評して」のように頼みます。エージェント向けの全体の指示は `AGENTS.md` にあります（Claude Code は `CLAUDE.md` 経由で同じものを読みます）。スキルの本体は `.claude/skills/` にあり、`.agents/skills`（Codex）と `.cursor/skills`（Cursor）はそこへのシンボリックリンクです。Windows で使う場合は、git の設定でシンボリックリンクを有効にしてください。
+
 ## フォルダ構成
 
 ```
+AGENTS.md / CLAUDE.md AI エージェント向けの指示
+.claude/skills/       エージェント用スキル（poster-build / poster-writing）
 Makefile              リポジトリ全体の操作（new / setup / doctor / all）
 tools/
   poster.mk           ビルドのルール（各ポスターの Makefile はこれを include するだけ）
